@@ -1,0 +1,52 @@
+<html>
+	<head>
+	  <title>LinkedIn JavaScript API Token Exchange</title>
+
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>     
+
+	  <script src="http://platform.linkedin.com/in.js">
+	    api_key: z97t008dk0ar
+	    authorize: true
+	  </script>
+
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	  <script type="text/javascript" src="http://code.jquery.com/jquery-1.5b1.js"></script>
+	  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js"></script>  
+
+	  <script type="text/javascript">
+			function loadData() {
+				var keywords = "georgia tech alumni";
+
+			  IN.API.PeopleSearch()
+    			.fields("firstName", "lastName", "distance", "publicProfileUrl","pictureUrl", "id")
+	        .params({"keywords": keywords, "count": 1000, "sort": "distance"})
+	        .result( function(result) {
+		  			profHTML = "<h4>People search results for keyword: <span style='color: blue;'>" + keywords + "</span></h4>";
+    				for (var index in result.people.values) {
+          		profile = result.people.values[index]
+          		if (profile.pictureUrl) {
+            		profHTML += "<p><a href=\"" + profile.publicProfileUrl + "\">";
+            		profHTML += "<img class=img_border height=30 align=\"left\" src=\"" + profile.pictureUrl + "\"></a>"; 
+            		profHTML += "<p>" + profile.firstName + " " + profile.lastName + " (" + profile.distance + ") id: " + profile.id + "</p>";
+          		}
+          	}
+    				$("#search").html(profHTML);
+	      	});
+			}
+
+			function loadUser() {
+				
+				IN.API.Profile("nEHpCdf4Z1")
+					.fields("firstName","lastName","headline","pictureUrl", "id")
+					.result(function(result) {
+						$("#search").html( JSON.stringify(result) );
+  				});
+			}
+		</script>
+
+	</head>
+	<body>
+		<div id="search"></div>
+	  <script type="in/login" data-onAuth="loadUser"></script>
+	</body>
+</html>
